@@ -87,6 +87,11 @@ func (d *Decoder) Decode(src map[string]any, dst any) error {
 }
 
 func (d *Decoder) decode(name string, data any, val reflect.Value) error {
+	if !val.IsValid() {
+		// TODO: Why is an invalid value generated?
+		// If an invalid value is passed to `decodeString`, it will panic due to the call to `Type()`.
+		return fmt.Errorf("'%s' is not valid", name)
+	}
 	for {
 		kind := val.Kind()
 		if kind == reflect.Pointer && val.IsNil() {
